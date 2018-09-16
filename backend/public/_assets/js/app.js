@@ -15,7 +15,7 @@ var app = new Vue({
     
     methods: {
         fetchData: function() {
-			var xhr = new XMLHttpRequest()
+			/*var xhr = new XMLHttpRequest()
 			var self = this
 			xhr.open('GET', 'https://c5102e1b.ngrok.io/api/posts')
 			xhr.onload = function() {
@@ -23,6 +23,8 @@ var app = new Vue({
                 console.log(self.data)
 			    }
 			xhr.send()
-		    }
-	    }
+            }*/
+            console.log("hello")
+        }
+    }
   })
