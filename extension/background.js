@@ -6,10 +6,14 @@ chrome.runtime.onInstalled.addListener(function() {
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
     chrome.declarativeContent.onPageChanged.addRules([{
       conditions: [new chrome.declarativeContent.PageStateMatcher({
-        pageUrl: {hostEquals: 'www.google.ca', schemes: ['https']} //TODO: allow all domains later
+        pageUrl: {schemes: ['https']} //TODO: allow all domains later
       })
       ],
       actions: [new chrome.declarativeContent.ShowPageAction()]
     }]);
   });
+});
+
+chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
+    chrome.tabs.executeScript(null,{file:"content.js"});
 });

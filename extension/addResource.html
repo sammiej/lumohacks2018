@@ -7,6 +7,7 @@
         height: 30px;
         width: 60px;
         outline: none;
+        float: right;
       }
     </style>
   </head>
@@ -15,14 +16,15 @@
     <form id="resourceForm">
         User ID: <input type=text id='userID'><br>
         Image URL: <input type=text id='imageURL'><br>
+        Title: <div id='title'></div>
         Resource URL: <div id='resourceURL'></div>
         <select class=action id='category'>
-          <option value=category1>Category1</option>
-          <option value=category2>Category2</option>
+          <option value=1>Veterans</option>
+          <option value=2>First Responders</option>
         </select>
         <input type='submit' value='Submit' id='resourceSubmit'>
     </form>
   </body>
-  <script src="popup.js"></script>
-  </body>
+  <script src="libs/algoliasearch.js"></script>
+  <script src="addResource.js"></script>
 </html>
