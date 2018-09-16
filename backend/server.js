@@ -240,20 +240,54 @@ router.post("/posts/upvote", function(req, res) {
   URL: https://c5102e1b.ngrok.io/api/posts
  */
 router.get("/posts", function(req, res) {
-  //stub
-  let sampleResObj = {
-    "posts": [
-      {
-        "PostId": "61ccbf82-4061-48b9-be7b-bf1e7f84bc07",
-        "Link": "https://www.theglobeandmail.com/opinion/article-how-many-people-actually-suffer-from-mental-illness/",
-        "Title": "How many people actually suffer from mental illness?",
-        "ImageUrl": null,
-        "Kudos": 43,
-        "BadgeName": "RoboCop"
+  getPool().then(function(pool) {
+    let queryString = `SELECT p.PostId, c.Title cTitle, p.DateCreated, p.Link, p.Title pTitle, p.ImageUrl, p.Kudos, b.Title bTitle
+                       FROM dbo.Post p
+                       INNER JOIN dbo.Category c
+                       ON p.CategoryId = c.CategoryId
+                       INNER JOIN dbo.[User] u
+                       ON p.UserId = u.UserId
+                       INNER JOIN dbo.UserBadge ub
+                       ON u.UserId = ub.UserId
+                       INNER JOIN dbo.Badge b
+                       ON ub.BadgeId = b.BadgeId`
+
+    let request = new sql.Request(pool);
+    request.query(queryString, function(err, result) {
+      if (err) {
+        console.log("encountered an error with executing query");
+        return res.status(500).send({
+          "Error": "encountered and error with executing query"
+        });
       }
-    ]
-  }
-  return res.send(sampleResObj);
+
+      if (result.recordset.length < 1) {
+        res.status(403).send({
+          "Error": "No posts found"
+        });
+      }
+
+      let returnObj = {};
+      returnObj.Posts = [];
+      result.recordset.forEach(function(record) {
+        returnObj.Posts.push({
+          "PostId": record.PostId,
+          "PostCategory": record.cTitle,
+          "DateCreated": record.DateCreated,
+          "Link": record.Link,
+          "Title": record.pTitle,
+          "ImageUrl": record.ImageUrl,
+          "Kudos": record.Kudos,
+          "BadgeName": record.bTitle
+        });
+      });
+
+      return res.send(returnObj);
+    });
+  }).catch(function(err) {
+    console.log("encountered an error getting pool");
+    return res.sendStatus(500);
+  });
 });
 
 app.use("/api", router);
