@@ -103,11 +103,11 @@ router.get("/user/saved", function(req, res) {
                        ON u.UserId = ub.UserId
                        INNER JOIN dbo.Badge b
                        ON ub.BadgeId = b.BadgeId
-                       WHERE sp.UserId = @userid`
+                       WHERE sp.UserId = @userid`;
 
     let ps = new sql.PreparedStatement(pool);
     ps.input("userid", sql.UniqueIdentifier);
-    ps.prepare(queryString, function(err, result) {
+    ps.prepare(queryString, function(err) {
       if (err) {
         console.log("couldn't prepare statement");
         return res.sendStatus(500);
@@ -173,7 +173,7 @@ router.post("/posts", function(req, res) {
     }
 
     let queryString = `INSERT INTO dbo.Post (Link, Title, ImageUrl, CategoryId, UserId)
-                       VALUES (@link, @title, @imageurl, @categoryid, @userid)`
+                       VALUES (@link, @title, @imageurl, @categoryid, @userid)`;
 
     let ps = new sql.PreparedStatement(pool);
     ps.input("link", sql.NVarChar(256));
@@ -181,7 +181,7 @@ router.post("/posts", function(req, res) {
     ps.input("imageurl", sql.NVarChar(256));
     ps.input("categoryid", sql.Int);
     ps.input("userid", sql.UniqueIdentifier);
-    ps.prepare(queryString, function(err, result) {
+    ps.prepare(queryString, function(err) {
       if (err) {
         console.log("couldn't prepare statement");
         return res.sendStatus(500);
@@ -226,13 +226,79 @@ router.post("/posts", function(req, res) {
   POST - Kudos
   URL: https://c5102e1b.ngrok.io/api/posts/kudos
  */
-router.post("/posts/upvote", function(req, res) {
-  if (!req.body) return res.sendStatus(400)
-  //stub
-  let sampleResObj = {
-    "kudos": 43
-  }
-  return res.sendStatus(200);
+router.post("/posts/kudos", function(req, res) {
+  getPool().then(function(pool) {
+    if (!req.body.PostId) return res.sendStatus(400);
+
+    let updateQueryString = `UPDATE dbo.Post
+                             SET Kudos = Kudos + 1
+                             WHERE PostId = @postid`;
+    let selectQueryString = `SELECT Kudos
+                             FROM dbo.Post
+                             WHERE PostId = @postid`;
+    let paramsObj = {
+      "postid": req.body.PostId
+    }
+
+    let ps = new sql.PreparedStatement(pool);
+    ps.input("postid", sql.UniqueIdentifier);
+    ps.prepare(updateQueryString, function(err) {
+      if (err) {
+        console.log("couldn't prepare statement");
+        return res.sendStatus(500);
+      }
+
+      ps.execute(paramsObj, function(err, result) {
+        if (err) {
+          console.log("encountered an error with executing query");
+          return res.sendStatus(500);
+        }
+
+        ps.unprepare(function(err) {
+          if (err) {
+            console.log("encountered an error with unpreparing statement");
+          }
+
+          if (result.rowsAffected.length < 1) {
+            console.log("failed to add kudos");
+            res.status(500).send({
+              "Error": "failed to add kudos"
+            });
+          }
+          
+          ps.prepare(selectQueryString, function(err) {
+            if (err) {
+              console.log("couldn't prepare 2nd statement");
+              return res.sendStatus(500);
+            }
+
+            ps.execute(paramsObj, function(err, result) {
+              if (err) {
+                console.log("encountered an error with executing 2nd query");
+                return res.sendStatus(500);
+              }
+
+              ps.unprepare(function(err) {
+                if (err) {
+                  console.log("encountered an error with unpreparing 2nd statement");
+                }
+
+                if (result.recordset.length < 1) {
+                  res.status(403).send({
+                    "Error": "could not find the post we just added to..."
+                  });
+                }
+
+                return res.send({
+                  "Kudos": result.recordset[0].Kudos
+                });
+              })
+            });
+          });
+        });
+      });
+    });
+  });
 });
 
 /*
@@ -250,7 +316,7 @@ router.get("/posts", function(req, res) {
                        INNER JOIN dbo.UserBadge ub
                        ON u.UserId = ub.UserId
                        INNER JOIN dbo.Badge b
-                       ON ub.BadgeId = b.BadgeId`
+                       ON ub.BadgeId = b.BadgeId`;
 
     let request = new sql.Request(pool);
     request.query(queryString, function(err, result) {
@@ -291,7 +357,6 @@ router.get("/posts", function(req, res) {
 });
 
 app.use("/api", router);
-
 
 app.listen(port);
 
