@@ -16,8 +16,6 @@ app.use(function(req, res, next) {
 const port = process.env.PORT || 3000;
 const router = express.Router();
 
-//let pool = getPool();
-
 router.get("/", function(req, res) {
   res.json({
     message: "ncs-backend"
@@ -345,6 +343,48 @@ router.get("/posts", function(req, res) {
           "ImageUrl": record.ImageUrl,
           "Kudos": record.Kudos,
           "BadgeName": record.bTitle
+        });
+      });
+
+      return res.send(returnObj);
+    });
+  }).catch(function(err) {
+    console.log("encountered an error getting pool");
+    return res.sendStatus(500);
+  });
+});
+
+/*
+  GET - Get categories
+  URL: https://c5102e1b.ngrok.io/api/categories
+ */
+router.get("/categories", function(req, res) {
+  getPool().then(function(pool) {
+    let queryString = `SELECT CategoryId, Title, Description
+                       FROM dbo.Category`;
+
+    let request = new sql.Request(pool);
+    request.query(queryString, function(err, result) {
+      if (err) {
+        console.log("encountered an error with executing query");
+        return res.status(500).send({
+          "Error": "encountered and error with executing query"
+        });
+      }
+
+      if (result.recordset.length < 1) {
+        res.status(403).send({
+          "Error": "No categories found"
+        });
+      }
+
+      let returnObj = {};
+      returnObj.Categories = [];
+      result.recordset.forEach(function(record) {
+        returnObj.Categories.push({
+          "CategoryId": record.CategoryId,
+          "Title": record.Title,
+          "Description": record.Description
         });
       });
 
