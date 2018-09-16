@@ -76,7 +76,7 @@ input:checked + label {
     cursor:pointer;
 }
 .flare {
-    margin-left: 40%;
+    float: right;
     color: #fff;
     background: #F2B134;
     opacity: 0.5;
