@@ -4,7 +4,15 @@ body {
     max-width: 80em;
     padding: 1em 0;
 }
-
+h1 {
+    text-align: center;
+}
+i.fa.fa-arrow-circle-up.logo {
+    color: #79bd8f;
+    font-size: 25px;
+    vertical-align: top;
+    padding: 2px;
+}
 .bound {
     margin: 20px 110px 20px 110px;
 }
