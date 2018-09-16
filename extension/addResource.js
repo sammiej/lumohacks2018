@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 document.getElementById('resourceForm').addEventListener('submit', function(e) {
     //indexResource();
     postResource();
-    window.close();
+    //window.close();
 });
 
 function postResource() {
@@ -42,13 +42,14 @@ function postResource() {
     var request = new XMLHttpRequest();
 
     console.log(JSON.stringify({Link: resourceURL.textContent, Title: title.textContent, ImageUrl: imageURL.value, CategoryId: category.value, UserId: userID.value}));
-    request.open("POST", "https://c5102e1b.ngrok.io/api/posts", true);
+    request.open("POST", "https://65edbc23.ngrok.io/api/posts/", true);
     request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
     request.onreadystatechange = function() {//Call a function when the state changes.
         if(request.readyState == 4 && request.status == 200) {
             alert(request.responseText);
         }
-    }
+    };
+
     request.send(JSON.stringify({Link: resourceURL.textContent, Title: title.textContent, ImageUrl: imageURL.value, CategoryId: category.value, UserId: userID.value})); //TODO: change category to id later
 }
