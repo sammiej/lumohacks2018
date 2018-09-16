@@ -2,6 +2,7 @@ const express = require("express");        // call express
 const app = express();                 // define our app using express
 const bodyParser = require("body-parser");
 const mssql = require("mssql");
+app.use(express.static('public'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -26,6 +27,7 @@ router.get("/posts", function(req, res) {
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 app.use("/api", router);
+
 
 app.listen(port);
 console.log("Server running on port: " + port);

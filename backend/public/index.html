@@ -9,17 +9,16 @@
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600" rel="stylesheet">
 </head>
 <body>
-  <div class="bound">
+  <div id="app">
+    <h1>{{ greeting }}</h1> 
+ 
 
-      <div id="app">
-          <h1>{{ greeting }}</h1> 
-          <template v-for="num in categories">
-        
-            <p> {{ num  }}</p>
-          </template>  
-      </div>
-      
-  </div>
+  <template v-for="num in categories">
+ 
+    <p> {{ num  }}</p>
+  </template>  
+
+</div>
 </body>
 <script src="/_assets/js/app.js"></script>
 
