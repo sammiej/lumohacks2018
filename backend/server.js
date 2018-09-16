@@ -1,8 +1,8 @@
 const express = require("express");        // call express
 const app = express();                 // define our app using express
 const bodyParser = require("body-parser");
+const sql = require("mssql");
 const getPool = require("./db").getPool;
-const mssql = require("mssql");
 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -16,7 +16,7 @@ app.use(function(req, res, next) {
 const port = process.env.PORT || 3000;
 const router = express.Router();
 
-let pool = getPool();
+//let pool = getPool();
 
 router.get("/", function(req, res) {
   res.json({
@@ -29,14 +29,58 @@ router.get("/", function(req, res) {
   URL: https://c5102e1b.ngrok.io/api/user/auth
  */
 router.post("/user/auth", function(req, res) {
-  if (!req.body) return res.sendStatus(400);
-  //stub
-  let sampleResObj = {
-    "UserId": "da8ea5b4-f675-4192-8f92-7ab3645aafce",
-    "UserName": "nickc95",
-    "BadgeName": "RoboCop"
-  }
-  return res.send(sampleResObj);
+  getPool().then(function(pool) {
+    if (!req.body.Username || !req.body.Password) return res.sendStatus(400);
+
+    let queryString = `SELECT u.UserId, u.Username, b.Title
+                      FROM dbo.[User] u, dbo.Badge b
+                      LEFT JOIN dbo.UserBadge ub
+                      ON UserId = ub.UserId
+                      WHERE u.Username = @username AND u.Password = @password`;
+
+    let ps = new sql.PreparedStatement(pool);
+    ps.input("username", sql.VarChar(50));
+    ps.input("password", sql.VarChar(128));
+    ps.prepare(queryString, function(err) {
+      if (err) {
+        console.log("couldn't prepare statement");
+        return res.sendStatus(500);
+      }
+
+      let paramsObj = {
+        "username": req.body.Username,
+        "password": req.body.Password
+      }
+
+      ps.execute(paramsObj, function(err, result) {
+        if (err) {
+          console.log("encountered an error with executing query");
+          return res.sendStatus(500);
+        }
+
+        if (result.recordsets.length < 1) {
+          res.status(403).send({
+            "Error": "No user found matching that Username/Password"
+          });
+        }
+        ps.unprepare(function(err) {
+          if (err) {
+            console.log("encountered an error with unpreparing statement");
+            return res.sendStatus(500);
+          }
+
+          return res.send({
+            "UserId": result.recordset[0].UserId,
+            "Username": result.recordset[0].Username,
+            "BadgeName": result.recordset[0].Title
+          });
+        });
+      });
+    });
+  }).catch(function(err) {
+    console.log("encountered an error getting pool");
+    return res.sendStatus(500);
+  });
 });
 
 /*
