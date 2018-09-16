@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Welcome to NCS</title>
+  <script src="/_assets/vuejs/vue.min.js"></script>
+  <script src="/_assets/vuejs/vue-router.min.js"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <link rel="stylesheet" href="/_assets/css/styles.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+</head>
+<body>
+  <div class="bound">
+    
+    <div id="app">
+      <h1>{{ greeting }}</h1>
+        <div class="menu-grid nav">
+        <template v-for="item in categories">
+          
+            <input type="radio"
+              :id="item"
+              :value="item"
+              name="item"
+              v-model="navigation">
+            <label :for="item" class="menu-item">{{ item }}</label> 
+          
+        </template>  
+        </div>
+        <div class="grid posts">
+        <template v-for="title in titles">
+         
+            <div class="module">{{title}}</div>
+          
+        </template>
+      </div> 
+  </div>
+</body>
+<script src="/_assets/js/app.js"></script>
+
+</html>

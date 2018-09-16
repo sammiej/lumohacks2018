@@ -2,7 +2,9 @@ const express = require("express");        // call express
 const app = express();                 // define our app using express
 const bodyParser = require("body-parser");
 const getPool = require("./db").getPool;
+const mssql = require("mssql");
 
+app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(function(req, res, next) {
@@ -111,6 +113,7 @@ router.get("/posts", function(req, res) {
 });
 
 app.use("/api", router);
+
 
 app.listen(port);
 
