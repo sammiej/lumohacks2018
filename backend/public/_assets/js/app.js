@@ -1,4 +1,4 @@
-var apiURL= "https://c5102e1b.ngrok.io/api/posts"
+var apiURL= "https://65edbc23.ngrok.io/api/posts"
 var app = new Vue({
     router,
     data: {
