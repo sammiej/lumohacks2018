@@ -6,6 +6,7 @@
   <script src="/_assets/vuejs/vue-router.min.js"></script>
   <script src="https://unpkg.com/feather-icons"></script>
   <link rel="stylesheet" href="/_assets/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 </head>
@@ -18,21 +19,30 @@
         <template v-for="item in categories">
           
             <input type="radio"
-              :id="item"
-              :value="item"
-              name="item"
+              :id="item.id"
+              :value="item.id"
+              name="item.id"
               v-model="navigation">
-            <label :for="item" class="menu-item">{{ item }}</label> 
+            <label :for="item.id" class="menu-item">{{ item.name }}</label> 
           
         </template>  
         </div>
-        <div class="grid posts">
-        <template v-for="title in titles">
+       
+       
+        <div class="grid">
+        <template v-for="posts in data">
          
-            <div class="module">{{title}}</div>
+            <div class="posts module cool-link" v-for="(item, index) in posts">
+              
+              <h2><a :href="posts[0].Link" target="_blank">{{posts[index].Title}}</a></h2>
+              <div class="post-info"></div><button v-on:click="updateKudo" > 
+                  <i class="fa fa-arrow-circle-up" v-bind:class="{kudoclick:arrowToggle}"><span class="kudo-points"> {{posts[index].Kudos}}</span>
+                  </i></button><span class="flare">{{posts[index].BadgeName}}</span></div>
+            </div>
           
+         
         </template>
-      </div> 
+      </div>
   </div>
 </body>
 <script src="/_assets/js/app.js"></script>

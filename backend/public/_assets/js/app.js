@@ -1,22 +1,20 @@
 feather.replace();
 
-
+var apiURL= "https://c5102e1b.ngrok.io/api/posts"
 var app = new Vue({
     router,
     data: {
         greeting: 'Shareit',
-        categories: ['veterans', 'first responders'],
-        navigation: 'veterans',
-        titles: [
-            'Mauris maximus massa sit amet condimentum faucibus.',
-            'Cras ultricies dolor id augue scelerisque, a cursus justo egestas.',
-            'Maecenas tempor lorem fringilla massa tempor, quis sollicitudin erat rutrum.', 
-            'Lorem fringilla massa tempor, quis sollicitudin erat rutrum.TITLE4', 
-            'Massa tempor, quis sollicitudin erat rutrum.',
-            'Cras ultricies dolor id augue scelerisque, a cursus justo egestas.',
-            'Maecenas tempor lorem fringilla massa tempor, quis sollicitudin erat rutrum.', 
-            'Lorem fringilla massa tempor, quis sollicitudin erat rutrum.TITLE4', 
-            'Massa tempor, quis sollicitudin erat rutrum.']
+        categories: [
+                        {id:1, name:'Veterans'}, 
+                        {id:2, name:'First responders'},
+                        {id:0, name:'Show All'}
+                    ],
+        navigation: 0,
+        data: [],
+        kudos:[],
+        arrowToggle: false,
+        misc: []
     },
 
     created: function() {
@@ -27,20 +25,33 @@ var app = new Vue({
     },
     methods: {
         grabData: function() {
-			/*var xhr = new XMLHttpRequest()
-			var self = this
-			xhr.open('GET', 'https://c5102e1b.ngrok.io/api/posts')
+            var xhr = new XMLHttpRequest()
+            var self = this
+            if(self.navigation == 0) {
+                apiURL = "https://c5102e1b.ngrok.io/api/posts"
+            } 
+            if(self.navigation == 1 ){
+                apiURL = "https://c5102e1b.ngrok.io/api/posts?CategoryId=" + self.navigation
+            }
+            if(self.navigation == 2){
+                apiURL = "https://c5102e1b.ngrok.io/api/posts?CategoryId=" + self.navigation
+            }
+			xhr.open('GET', apiURL)
 			xhr.onload = function() {
-				self.data = JSON.parse(xhr.responseText)
-                console.log(self.data)
+                self.data = JSON.parse(xhr.responseText)
 			    }
-			xhr.send()
-            }*/
-            console.log(this.navigation)
-            return 'hello'
-        },
+            xhr.send()
+            },
+        updateKudo: function(){
+                if(this.arrowToggle == true){
+                    this.arrowToggle = false;
+                }else{
+                    this.arrowToggle = true;
+                }
+        }
+        }
+    
         
-    }
   }).$mount('#app')
 
 var router = new VueRouter({

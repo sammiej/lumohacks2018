@@ -6,7 +6,7 @@ body {
 }
 
 .bound {
-    margin: 20px 150px 20px 150px;
+    margin: 20px 110px 20px 110px;
 }
 .nav {
     text-align: center;
@@ -30,6 +30,8 @@ label {
 input:checked + label {
     background: #79bd8f;
 }
+
+/**posts**/
 .grid {
     /* Grid Fallback */
     display: flex;
@@ -42,18 +44,77 @@ input:checked + label {
     grid-gap: 1em;
   }
  
-  .module {
-    display: flex;
+.module {
+    background: #fafafa;
+    display: inline;
     align-items: center;
-    justify-content: center;
-    height: 200px;
+    justify-content: center;    
     
     /* Flex Fallback */
     margin-left: 5px;
     margin-right: 5px;
     flex: 1 1 200px;
-  }
-  
-svg.feather {
-    color:#00A388;
 }
+.posts {
+    text-align: left;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 15px;
+    padding-bottom: 20px;
+}  
+
+.posts h2 a {
+    text-decoration: none;
+    color: #3c3c3c;
+}
+.posts h2 a:hover {
+    cursor:pointer;
+}
+.flare {
+    margin-left: 40%;
+    color: #fff;
+    background: #00A388;
+    opacity: 0.5;
+    padding: 3px;
+    border-radius: 7px;
+}
+.kudo-points{
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    vertical-align: top; 
+}
+
+button {
+    background: none;
+    border: 0;
+}
+i.fa.fa-arrow-circle-up{
+    font-size: 20px;
+    vertical-align: middle;
+    line-height: 30px;
+    color: #3c3c3c;
+}
+i.fa.fa-arrow-circle-up:hover{
+   color: #ff6138;
+   cursor: pointer;
+}
+i.fa.fa-arrow-circle-up.kudoclick {
+    color: #ff6138;
+}
+
+.cool-link::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: #3c3c3c;
+    transition: width .2s;
+    margin-left: -5px;
+}
+
+.cool-link:hover::after {
+    margin-left: -5px;
+    width: 104.5%;
+}
+
