@@ -123,11 +123,6 @@ router.get("/user/saved", function(req, res) {
           return res.sendStatus(500);
         }
 
-        if (result.recordsets.length < 1) {
-          res.status(403).send({
-            "Error": "No user found matching that Username/Password"
-          });
-        }
         ps.unprepare(function(err) {
           if (err) {
             console.log("encountered an error with unpreparing statement");
@@ -169,17 +164,62 @@ router.get("/user/saved", function(req, res) {
   URL: https://c5102e1b.ngrok.io/api/posts
  */
 router.post("/posts", function(req, res) {
-  if (!req.body) return res.sendStatus(400)
-  //stub
-  let sampleResObj = {
-    "PostId": "61ccbf82-4061-48b9-be7b-bf1e7f84bc07",
-    "Link": "https://www.theglobeandmail.com/opinion/article-how-many-people-actually-suffer-from-mental-illness/",
-    "Title": "How many people actually suffer from mental illness?",
-    "ImageUrl": null,
-    "Kudos": 43,
-    "BadgeName": "RoboCop"
-  }
-  return res.send(sampleResObj);
+  getPool().then(function(pool) {
+    if (!req.body.Link ||
+        !req.body.CategoryId ||
+        !req.body.UserId)
+    {
+      return res.sendStatus(400);
+    }
+
+    let queryString = `INSERT INTO dbo.Post (Link, Title, ImageUrl, CategoryId, UserId)
+                       VALUES (@link, @title, @imageurl, @categoryid, @userid)`
+
+    let ps = new sql.PreparedStatement(pool);
+    ps.input("link", sql.NVarChar(256));
+    ps.input("title", sql.VarChar(128));
+    ps.input("imageurl", sql.NVarChar(256));
+    ps.input("categoryid", sql.Int);
+    ps.input("userid", sql.UniqueIdentifier);
+    ps.prepare(queryString, function(err, result) {
+      if (err) {
+        console.log("couldn't prepare statement");
+        return res.sendStatus(500);
+      }
+
+      let paramsObj = {
+        "link": req.body.Link,
+        "title": req.body.Title,
+        "imageurl": req.body.ImageUrl,
+        "categoryid": req.body.CategoryId,
+        "userid": req.body.UserId
+      }
+
+      ps.execute(paramsObj, function(err, result) {
+        if (err) {
+          console.log("encountered an error with executing query");
+          return res.sendStatus(500);
+        }
+
+        ps.unprepare(function(err) {
+          if (err) {
+            console.log("encountered an error with unpreparing statement");
+          }
+
+          if (result.rowsAffected.length < 1) {
+            console.log("failed to add post");
+            res.status(500).send({
+              "Error": "failed to add post"
+            });
+          }
+          return res.sendStatus(200);
+        });
+      });
+    });
+  }).catch(function(err) {
+    console.log("encountered an error getting pool");
+    return res.sendStatus(500);
+  });
 });
 
 /*
