@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      button {
+        margin-top: 5px;
+        height: 30px;
+        width: 60px;
+        outline: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>Contribute Resource</h3>
+    <form id="resourceForm">
+        User ID: <input type=text id='userID'><br>
+        Image URL: <input type=text id='imageURL'><br>
+        Resource URL: <div id='resourceURL'></div>
+        <select class=action id='category'>
+          <option value=category1>Category1</option>
+          <option value=category2>Category2</option>
+        </select>
+        <input type='submit' value='Submit' id='resourceSubmit'>
+    </form>
+  </body>
+  <script src="popup.js"></script>
+  </body>
+</html>
