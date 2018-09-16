@@ -1,20 +1,32 @@
+feather.replace();
+
+
 var app = new Vue({
-    el: '#app',
+    router,
     data: {
-        greeting: 'Welcome to Shareit',
-        categories: {
-            dog: 1,
-            cat: 2,
-        },
-        data: []
+        greeting: 'Shareit',
+        categories: ['veterans', 'first responders'],
+        navigation: 'veterans',
+        titles: [
+            'Mauris maximus massa sit amet condimentum faucibus.',
+            'Cras ultricies dolor id augue scelerisque, a cursus justo egestas.',
+            'Maecenas tempor lorem fringilla massa tempor, quis sollicitudin erat rutrum.', 
+            'Lorem fringilla massa tempor, quis sollicitudin erat rutrum.TITLE4', 
+            'Massa tempor, quis sollicitudin erat rutrum.',
+            'Cras ultricies dolor id augue scelerisque, a cursus justo egestas.',
+            'Maecenas tempor lorem fringilla massa tempor, quis sollicitudin erat rutrum.', 
+            'Lorem fringilla massa tempor, quis sollicitudin erat rutrum.TITLE4', 
+            'Massa tempor, quis sollicitudin erat rutrum.']
     },
 
     created: function() {
-        this.fetchData()
+        this.grabData()
     },    
-    
+    watch: {
+        navigation: 'grabData',
+    },
     methods: {
-        fetchData: function() {
+        grabData: function() {
 			/*var xhr = new XMLHttpRequest()
 			var self = this
 			xhr.open('GET', 'https://c5102e1b.ngrok.io/api/posts')
@@ -24,7 +36,14 @@ var app = new Vue({
 			    }
 			xhr.send()
             }*/
-            console.log("hello")
-        }
+            console.log(this.navigation)
+            return 'hello'
+        },
+        
     }
-  })
+  }).$mount('#app')
+
+var router = new VueRouter({
+    mode: 'history'
+});
+  
