@@ -16,30 +16,28 @@
       <h1>{{ greeting }}</h1>
         <div class="menu-grid nav">
         <template v-for="item in categories">
-          
             <input type="radio"
               :id="item.id"
               :value="item.id"
               name="item.id"
               v-model="navigation">
-            <label :for="item.id" class="menu-item">{{ item.name }}</label> 
-          
+            <label :for="item.id" class="menu-item">{{ item.name }}</label>
         </template>  
         </div>
-       
-       
+
         <div class="grid">
         <template v-for="posts in data">
-         
             <div class="posts module cool-link" v-for="(item, index) in posts">
-              
               <h2><a :href="posts[0].Link" target="_blank">{{posts[index].Title}}</a></h2>
-              <div class="post-info"></div><button v-on:click="updateKudo(posts[index].PostId)" > 
-                  <i class="fa fa-arrow-circle-up"><span class="kudo-points"> {{posts[index].Kudos}}</span>
-                  </i></button><span class="flare">{{posts[index].BadgeName}}</span></div>
+                <div class="post-info">
+                <button v-on:click="updateKudo(posts[index].PostId)" > 
+                  <i class="fa fa-arrow-circle-up">
+                  <span class="kudo-points"> {{posts[index].Kudos}}</span>
+                  </i>
+                </button>
+                <span class="flare">{{posts[index].BadgeName}}</span>
+                </div>
             </div>
-          
-         
         </template>
       </div>
   </div>

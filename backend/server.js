@@ -34,6 +34,10 @@ router.get("/", function(req, res) {
   });
 });
 
+/**
+ * Spec Sheet: https://docs.google.com/document/d/16MlgArIYJh2YEvwqcZtCjCkfk0ydUOiFR0frAHbA58E/edit?usp=sharing
+ */
+
 /*
   POST - User “”””authentication””””
   URL: https://c5102e1b.ngrok.io/api/user/auth
@@ -287,35 +291,7 @@ router.post("/posts/kudos", function(req, res) {
             });
           }
 
-          ps.prepare(selectQueryString, function(err) {
-            if (err) {
-              console.log("couldn't prepare 2nd statement");
-              return res.sendStatus(500);
-            }
-
-            ps.execute(paramsObj, function(err, result) {
-              if (err) {
-                console.log("encountered an error with executing 2nd query");
-                return res.sendStatus(500);
-              }
-
-              ps.unprepare(function(err) {
-                if (err) {
-                  console.log("encountered an error with unpreparing 2nd statement");
-                }
-
-                if (result.recordset.length < 1) {
-                  res.status(403).send({
-                    "Error": "could not find the post we just added to..."
-                  });
-                }
-
-                return res.send({
-                  "Kudos": result.recordset[0].Kudos
-                });
-              })
-            });
-          });
+          return res.sendStatus(200);
         });
       });
     });
