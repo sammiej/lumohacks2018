@@ -1,5 +1,4 @@
 
-
 // Add kudos rating to links on Google search
 if (document.title.indexOf("Google") != -1) {
     var request = new XMLHttpRequest();
@@ -25,13 +24,14 @@ if (document.title.indexOf("Google") != -1) {
                     var newDiv = document.createElement('div');
                     newDiv.className = "searchFlag";
                     newDiv.innerHTML = `<div style="font-size: 8px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer;
-                        color: white; border-radius: 15px; width: 100px; background-color: #00A388; padding: 2px 3px 2px 6px;">+Kudos from NCS</div>`;
+                        color: white; border-radius: 15px; width: 100px; background-color: #00A388; padding: 2px 3px 2px 6px;">+Kudos from ShareIt</div>`;
 
                     h3.appendChild(newDiv);
                 }
             });
         }
-    }
+    };
+
     request.send();
 
 }

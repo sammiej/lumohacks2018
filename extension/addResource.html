@@ -2,22 +2,43 @@
 <html>
   <head>
     <style>
-      button {
-        margin-top: 5px;
-        height: 30px;
-        width: 60px;
-        outline: none;
-        float: right;
+      body {
+          width:
+      }
+      h3 {
+        font-size: 15px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+      input#resourceSubmit {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        cursor: pointer;
+        color: white;
+        border-radius: 15px;
+        background-color: #00A388;
+        padding: 2px 3px 2px 5px;
+      }
+      div {
+          font-family: 'Open Sans', sans-serif;
+          padding: 2px;
+      }
+      option {
+          font-family: 'Open Sans', sans-serif;
+      }
+      input {
+          border-radius: 8px;
       }
     </style>
   </head>
   <body>
     <h3>Contribute Resource</h3>
     <form id="resourceForm">
-        User ID: <input type=text id='userID'><br>
-        Image URL: <input type=text id='imageURL'><br>
-        Title: <div id='title'></div>
-        Resource URL: <div id='resourceURL'></div>
+        <div>User ID: <input type=text id='userID'></div>
+        <div>Image URL: <input type=text id='imageURL'></div>
+        <div>Title: <div id='title'></div></div>
+        <div>Resource URL: <div id='resourceURL'></div></div>
         <select class=action id='category'>
           <option value=1>Veterans</option>
           <option value=2>First Responders</option>
