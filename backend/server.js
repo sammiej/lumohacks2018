@@ -305,48 +305,71 @@ router.post("/posts/kudos", function(req, res) {
  */
 router.get("/posts", function(req, res) {
   getPool().then(function(pool) {
-    let queryString = `SELECT p.PostId, c.Title cTitle, p.DateCreated, p.Link, p.Title pTitle, p.ImageUrl, p.Kudos, b.Title bTitle
-                       FROM dbo.Post p
-                       INNER JOIN dbo.Category c
-                       ON p.CategoryId = c.CategoryId
-                       INNER JOIN dbo.[User] u
-                       ON p.UserId = u.UserId
-                       INNER JOIN dbo.UserBadge ub
-                       ON u.UserId = ub.UserId
-                       INNER JOIN dbo.Badge b
-                       ON ub.BadgeId = b.BadgeId`;
+    let queryString;
+    let paramsObj = {};
+    let ps = new sql.PreparedStatement(pool);
+    if (req.query.CategoryId) {
+      queryString = `SELECT p.PostId, c.Title cTitle, p.DateCreated, p.Link, p.Title pTitle, p.ImageUrl, p.Kudos, b.Title bTitle
+                     FROM dbo.Post p
+                     INNER JOIN dbo.Category c
+                     ON p.CategoryId = c.CategoryId
+                     INNER JOIN dbo.[User] u
+                     ON p.UserId = u.UserId
+                     INNER JOIN dbo.UserBadge ub
+                     ON u.UserId = ub.UserId
+                     INNER JOIN dbo.Badge b
+                     ON ub.BadgeId = b.BadgeId
+                     WHERE p.CategoryId = @categoryid`
 
-    let request = new sql.Request(pool);
-    request.query(queryString, function(err, result) {
+      ps.input("categoryid", sql.Int);
+      paramsObj["categoryid"] = req.query.CategoryId;
+    } else {
+      queryString = `SELECT p.PostId, c.Title cTitle, p.DateCreated, p.Link, p.Title pTitle, p.ImageUrl, p.Kudos, b.Title bTitle
+                     FROM dbo.Post p
+                     INNER JOIN dbo.Category c
+                     ON p.CategoryId = c.CategoryId
+                     INNER JOIN dbo.[User] u
+                     ON p.UserId = u.UserId
+                     INNER JOIN dbo.UserBadge ub
+                     ON u.UserId = ub.UserId
+                     INNER JOIN dbo.Badge b
+                     ON ub.BadgeId = b.BadgeId`;
+    }
+    ps.prepare(queryString, function(err) {
       if (err) {
-        console.log("encountered an error with executing query");
-        return res.status(500).send({
-          "Error": "encountered and error with executing query"
-        });
+        console.log("couldn't prepare statement");
+        return res.sendStatus(500);
       }
 
-      if (result.recordset.length < 1) {
-        res.status(403).send({
-          "Error": "No posts found"
-        });
-      }
+      ps.execute(paramsObj, function(err, result) {
+        if (err) {
+          console.log("encountered an error with executing query");
+          return res.sendStatus(500);
+        }
 
-      let returnObj = {};
-      returnObj.Posts = [];
-      result.recordset.forEach(function(record) {
-        returnObj.Posts.push({
-          "PostId": record.PostId,
-          "PostCategory": record.cTitle,
-          "DateCreated": record.DateCreated,
-          "Link": record.Link,
-          "Title": record.pTitle,
-          "ImageUrl": record.ImageUrl,
-          "Kudos": record.Kudos,
-          "BadgeName": record.bTitle
+        ps.unprepare(function(err) {
+          if (err) {
+            console.log("encountered an error with unpreparing statement");
+          }
+
+          let returnObj = {};
+          returnObj.Posts = [];
+          result.recordset.forEach(function(record) {
+            returnObj.Posts.push({
+              "PostId": record.PostId,
+              "PostCategory": record.cTitle,
+              "DateCreated": record.DateCreated,
+              "Link": record.Link,
+              "Title": record.pTitle,
+              "ImageUrl": record.ImageUrl,
+              "Kudos": record.Kudos,
+              "BadgeName": record.bTitle
+            });
+          });
+
+          return res.send(returnObj);
         });
       });
-
-      return res.send(returnObj);
     });
   }).catch(function(err) {
     console.log("encountered an error getting pool");
