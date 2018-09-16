@@ -27,8 +27,13 @@ label {
     background-color: #00A388;
     padding: 5px 15px 5px 15px;
 }
+
+label:hover{
+    background: #79bd8f;
+}
 input:checked + label {
     background: #79bd8f;
+    font-weight: 600;
 }
 
 /**posts**/
@@ -60,7 +65,7 @@ input:checked + label {
     padding-left: 15px;
     padding-right: 15px;
     padding-top: 15px;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
 }  
 
 .posts h2 a {
@@ -73,7 +78,7 @@ input:checked + label {
 .flare {
     margin-left: 40%;
     color: #fff;
-    background: #00A388;
+    background: #F2B134;
     opacity: 0.5;
     padding: 3px;
     border-radius: 7px;

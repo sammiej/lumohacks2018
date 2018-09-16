@@ -12,9 +12,7 @@ var app = new Vue({
                     ],
         navigation: 0,
         data: [],
-        kudos:[],
         arrowToggle: false,
-        misc: []
     },
 
     created: function() {
@@ -25,30 +23,45 @@ var app = new Vue({
     },
     methods: {
         grabData: function() {
+            var request = ''
             var xhr = new XMLHttpRequest()
             var self = this
             if(self.navigation == 0) {
-                apiURL = "https://c5102e1b.ngrok.io/api/posts"
+                request = apiURL
             } 
             if(self.navigation == 1 ){
-                apiURL = "https://c5102e1b.ngrok.io/api/posts?CategoryId=" + self.navigation
+                request = apiURL + "?CategoryId=" + self.navigation
             }
             if(self.navigation == 2){
-                apiURL = "https://c5102e1b.ngrok.io/api/posts?CategoryId=" + self.navigation
+                request = apiURL + "?CategoryId=" + self.navigation
             }
-			xhr.open('GET', apiURL)
+
+			xhr.open('GET', request)
 			xhr.onload = function() {
                 self.data = JSON.parse(xhr.responseText)
+                console.log(self.data)
 			    }
             xhr.send()
-            },
-        updateKudo: function(){
-                if(this.arrowToggle == true){
-                    this.arrowToggle = false;
-                }else{
-                    this.arrowToggle = true;
+            }, 
+            updateKudo:  function(param){
+               
+
+                var url = apiURL + '/kudos';
+                var kudoData = {
+                    PostId: param,
                 }
-        }
+            
+                var json = JSON.stringify(kudoData)
+                
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', url, false);
+                
+                //Send the proper header information along with the request
+                 xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+               
+                 xhr.send(json);
+                this.grabData()
+            }
         }
     
         
