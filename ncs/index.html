@@ -4,12 +4,19 @@
   <title>Welcome to Vue</title>
   <script src="https://unpkg.com/vue"></script>
   <link rel="stylesheet" href="/_assets/css/styles.css">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600" rel="stylesheet">
 </head>
 <body>
   <div id="app">
     <h1>{{ greeting }}</h1> 
-  </div>
+ 
 
+  <template v-for="num in categories">
+ 
+    <p> {{ num  }}</p>
+  </template>  
+
+</div>
 </body>
 <script src="/_assets/js/app.js"></script>
 </html>
