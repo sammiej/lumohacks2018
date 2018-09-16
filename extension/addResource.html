@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      button {
+        margin-top: 5px;
+        height: 30px;
+        width: 60px;
+        outline: none;
+        float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>Contribute Resource</h3>
+    <form id="resourceForm">
+        User ID: <input type=text id='userID'><br>
+        Image URL: <input type=text id='imageURL'><br>
+        Title: <div id='title'></div>
+        Resource URL: <div id='resourceURL'></div>
+        <select class=action id='category'>
+          <option value=1>Veterans</option>
+          <option value=2>First Responders</option>
+        </select>
+        <input type='submit' value='Submit' id='resourceSubmit'>
+    </form>
+  </body>
+  <script src="libs/algoliasearch.js"></script>
+  <script src="addResource.js"></script>
+</html>

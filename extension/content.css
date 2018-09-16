@@ -1,0 +1,10 @@
+div .searchFlag {
+    font-size: 8px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    cursor: pointer !important;
+    color: white !important;
+    border-radius: 15px !important;
+    background-color: #00A388 !important;
+    padding: 1px 3px 1px 3px !important;
+}
