@@ -4,6 +4,18 @@ const bodyParser = require("body-parser");
 const sql = require("mssql");
 const getPool = require("./db").getPool;
 
+const algoliasearch = require('algoliasearch');
+const client = algoliasearch('XE5N8JFHZQ', '80212eeaef09be163642b378be1a7987');
+const index = client.initIndex('links');
+
+index.setSettings({
+    'searchableAttributes': [
+        'link'
+    ]
+}, function(err, content) {
+    console.log(content);
+});
+
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -19,7 +31,7 @@ const router = express.Router();
 router.get("/", function(req, res) {
   res.json({
     message: "ncs-backend"
-  });   
+  });
 });
 
 /**
@@ -129,7 +141,7 @@ router.get("/user/saved", function(req, res) {
           if (err) {
             console.log("encountered an error with unpreparing statement");
           }
-          
+
           if (result.recordset.length < 1) {
             res.status(403).send({
               "Error": "No saved posts found for this user"
@@ -166,6 +178,7 @@ router.get("/user/saved", function(req, res) {
   URL: https://c5102e1b.ngrok.io/api/posts
  */
 router.post("/posts", function(req, res) {
+    console.log("reached post endpoint");
   getPool().then(function(pool) {
     if (!req.body.Link ||
         !req.body.CategoryId ||
@@ -177,6 +190,7 @@ router.post("/posts", function(req, res) {
     let queryString = `INSERT INTO dbo.Post (Link, Title, ImageUrl, CategoryId, UserId)
                        VALUES (@link, @title, @imageurl, @categoryid, @userid)`;
 
+    console.log("got here first");
     let ps = new sql.PreparedStatement(pool);
     ps.input("link", sql.NVarChar(256));
     ps.input("title", sql.VarChar(128));
@@ -196,6 +210,15 @@ router.post("/posts", function(req, res) {
         "categoryid": req.body.CategoryId,
         "userid": req.body.UserId
       }
+
+      console.log("got here second");
+      // algolia stuff
+      index.addObject(paramsObj, function(err, content) {
+          console.log(index);
+          if(err) {
+              console.error(err);
+          }
+      });
 
       ps.execute(paramsObj, function(err, result) {
         if (err) {
@@ -267,7 +290,7 @@ router.post("/posts/kudos", function(req, res) {
               "Error": "failed to add kudos"
             });
           }
-          
+
           return res.sendStatus(200);
         });
       });
