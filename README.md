@@ -1,6 +1,6 @@
 # lumohacks2018
 
-ShareIt is a web app and Chrome extension that allows first responders and veterans to contribute useful mental health resources to a community curated page using the extension. Users can also browse, filter, and upvote resources within the app. With the extension enabled, while performing any Google searches the extension automatically flags any results that have already been recommended to our app. 
+ShareIt is a web app and Chrome extension that allows first responders and veterans to contribute useful mental health resources to a community curated page using the extension. Users can also browse, filter, and upvote resources within the app. With the extension enabled, the extension automatically flags any Google search results that have already been recommended to our app. 
 
 ## Application
 <img src="https://user-images.githubusercontent.com/5414980/45794955-f3960900-bc4d-11e8-8405-05de7996e845.png" width="800px">
